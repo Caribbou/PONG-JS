@@ -17,9 +17,8 @@ let velocidadeDoOponente;
 let meusPontos = 0;
 let pontosOponente = 0;
 
-let ponto;
-let raquetada;
-let trilha;
+let canvasX = 600;
+let canvasY = 400
 
 
 function preload(){
@@ -29,8 +28,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(600, 400);
- trilha.loop()
+  createCanvas(canvasX, canvasY);
+  trilha.loop();
   
 }
 
@@ -75,10 +74,10 @@ function MinhaRaquete(){
 }
 
 function moverRaquete(){
-  if (keyIsDown(UP_ARROW)){
+  if (keyIsDown(UP_ARROW) && YRaquete > 0){
     YRaquete -= 10
   }
-  if (keyIsDown(DOWN_ARROW)){
+  if (keyIsDown(DOWN_ARROW) && YRaquete + HeightRaquete < canvasY){
     YRaquete += 10
   }
 }
@@ -87,6 +86,7 @@ function colisaoRaquete(){
       YBolinha - raio < YRaquete + HeightRaquete&&
       YBolinha + raio > YRaquete ){
     velocidadeXBolinha *= -1
+    XBolinha += raio
     raquetada.play()
   }
 }
@@ -99,14 +99,15 @@ function colideRaqueteOponente(){
   &&  YBolinha + raio < yRaqueteOponente + HeightRaquete
   &&  YBolinha + raio > yRaqueteOponente ){
     velocidadeXBolinha *= -1
-  raquetada.play()
+    XBolinha -= raio
+    raquetada.play()
   }
 }
 function moveRaqueteOponente(){
-   if (keyIsDown(87)){
+   if (keyIsDown(87) && yRaqueteOponente > 0){
     yRaqueteOponente -= 10
   }
-  if (keyIsDown(83)){
+  if (keyIsDown(83) && yRaqueteOponente + HeightRaquete < canvasY){
     yRaqueteOponente += 10
 }
 }
@@ -122,12 +123,14 @@ function marcaPonto(){
   rect (425, 32, 50, 20)
   fill (255)
   text(pontosOponente, 450, 50);
-  if(XBolinha>590){
+  if(XBolinha+raio>canvasX){
     meusPontos += 1
     ponto.play()
+    XBolinha = XBolinha - raio;
   }
-  if(XBolinha < 10){
+  if(XBolinha-raio < 0){
     pontosOponente += 1
     ponto.play()
+    XBolinha = XBolinha + raio;
   }
 }
